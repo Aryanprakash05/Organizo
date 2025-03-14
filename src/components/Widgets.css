@@ -6,7 +6,18 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    padding: 20px;
+    margin: 20px;
+}
+
+/* General Box Styling */
+.grid > div {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Hover Effect */
+.grid > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .bg-white {
@@ -153,4 +164,19 @@ body {
 .tasks-container {
     overflow-y: auto;
     max-height: 400px;
+}
+
+
+.task-deadline {
+    font-size: 0.85em;
+    color: #555;
+    margin-left: 10px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    margin-left: 10px;
 }

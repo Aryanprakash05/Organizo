@@ -7,12 +7,14 @@ import Topbar from './Topbar';
 const Widgets = () => {
     const [date, setDate] = useState(new Date());
     const [tasks, setTasks] = useState([]);
+    const [selectedPriority, setSelectedPriority] = useState('All');
 
-    // Function to add a task
-    const addTask = (taskText) => {
+    const addTask = (taskText, taskDeadline, taskPriority) => {
         const newTask = { 
             id: Date.now(), 
             text: taskText, 
+            deadline: taskDeadline || 'No Deadline', 
+            priority: taskPriority || 'Medium',
             completed: false 
         };
         
@@ -21,7 +23,6 @@ const Widgets = () => {
         localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     };
 
-    // Function to toggle task completion
     const toggleTaskCompletion = (taskId) => {
         const updatedTasks = tasks.map(task => 
             task.id === taskId ? { ...task, completed: !task.completed } : task
@@ -30,18 +31,20 @@ const Widgets = () => {
         localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     };
 
-    // Function to delete a task
     const deleteTask = (taskId) => {
         const updatedTasks = tasks.filter(task => task.id !== taskId);
         setTasks(updatedTasks);
         localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     };
 
-    // Load tasks from localStorage on component mount
     useEffect(() => {
-        const storedTasks = JSON.parse(localStorage.getItem("tasks"));
-        if (storedTasks) setTasks(storedTasks);
+        const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        setTasks(storedTasks);
     }, []);
+
+    const filteredTasks = selectedPriority === 'All' 
+        ? tasks 
+        : tasks.filter(task => task.priority === selectedPriority);
 
     return (
         <>
@@ -60,27 +63,36 @@ const Widgets = () => {
                 <div className="bg-white p-4 rounded-xl shadow tasks-container">
                     <h2 className="text-xl font-bold mb-4">📝 My Tasks</h2>
                     
-                    {/* Display Tasks */}
+                    <div>
+                        <label>Filter by Priority: </label>
+                        <select onChange={(e) => setSelectedPriority(e.target.value)} value={selectedPriority}>
+                            <option value="All">All</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+
                     <ul className="task-list">
-                        {tasks.map((task) => (
+                        {filteredTasks.map((task) => (
                             <li key={task.id} className={task.completed ? "completed" : ""}>
                                 <span onClick={() => toggleTaskCompletion(task.id)}>
-                                    {task.completed ? "✅" : "⬜"} {task.text}
+                                    {task.completed ? "✅" : "⬜"} {task.text} ({task.priority})
                                 </span>
-                                <button onClick={() => deleteTask(task.id)}>❌</button>
+                                <div>
+                                    <span className="task-deadline">Deadline: {task.deadline}</span>
+                                    <button className="delete-btn" onClick={() => deleteTask(task.id)}>❌</button>
+                                </div>
                             </li>
                         ))}
                     </ul>
                 </div>
 
                 <div className="bg-white p-4 rounded-xl shadow">
-                    <h2 className="text-xl font-bold mb-4">📂 My Categories</h2>
-                    <p>Categories Management (To be implemented)</p>
-                </div>
-
-                <div className="bg-white p-4 rounded-xl shadow">
                     <h2 className="text-xl font-bold mb-4">⏳ My Tracking</h2>
-                    <p>Tracking Progress (To be implemented)</p>
+                    <p>Total Tasks: {tasks.length}</p>
+                    <p>Completed Tasks: {tasks.filter(task => task.completed).length}</p>
+                    <p>Pending Tasks: {tasks.filter(task => !task.completed).length}</p>
                 </div>
             </div>
         </>

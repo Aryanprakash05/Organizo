@@ -6,7 +6,7 @@ const Sidebar = ({ setActivePage }) => {
 
     const handleMenuClick = (page) => {
         setActiveItem(page);
-        setActivePage(page);
+        setActivePage(page);  // Updates the activePage in the parent component
     };
 
     return (
@@ -22,10 +22,10 @@ const Sidebar = ({ setActivePage }) => {
                     📋 Dashboard
                 </div>
                 <div 
-                    className={`menuItem ${activeItem === "Notifications" ? "active" : ""}`} 
-                    onClick={() => handleMenuClick("Notifications")}
+                    className={`menuItem ${activeItem === "ProductivityStats" ? "active" : ""}`} 
+                    onClick={() => handleMenuClick("ProductivityStats")}
                 >
-                    🔔 Notifications
+                    📊 Productivity Stats
                 </div>
             </div>
         </div>

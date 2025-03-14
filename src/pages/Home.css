@@ -1,0 +1,11 @@
+.home {
+    display: flex;
+}
+
+.homeContainer {
+    margin-left: 250px; /* Width of the sidebar */
+    padding: 20px;
+    flex-grow: 1;
+    background-color: #F0F4F8;
+    min-height: 100vh;
+}
